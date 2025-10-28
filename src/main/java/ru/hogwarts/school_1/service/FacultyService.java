@@ -1,49 +1,46 @@
 package ru.hogwarts.school_1.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Objects;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+import org.springframework.transaction.annotation.Transactional;
 import ru.hogwarts.school_1.model.Faculty;
+import ru.hogwarts.school_1.repository.FacultyRepository;
 
 @Service
 public class FacultyService {
 
-    private final HashMap<Long, Faculty> faculties = new HashMap<>();
-    private long count = 0;
+    private final FacultyRepository facultyRepository;
 
+    @Autowired
+    public FacultyService(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
+    }
+
+    @Transactional
     public Faculty addFaculty(Faculty faculty) {
-        faculty.setId(count++);
-        faculties.put(faculty.getId(), faculty);
-        return faculty;
+        return facultyRepository.save(faculty);
     }
 
-    public Faculty findFaculty(long id) {
-        return faculties.get(id);
+    public Optional<Faculty> findFaculty(Long id) {
+        return facultyRepository.findById(id);
     }
 
-    public Faculty editFaculty(Faculty faculty) {
-        if (!faculties.containsKey(faculty.getId())) {
-            return null;
-        }
-        faculties.put(faculty.getId(), faculty);
-        return faculty;
+    @Transactional
+    public Faculty editFaculty(Faculty updatedFaculty) {
+        return facultyRepository.save(updatedFaculty);
     }
 
-    public Faculty deleteFaculty(long id) {
-        return faculties.remove(id);
+
+    @Transactional
+    public void deleteFaculty(Long id) {
+        facultyRepository.deleteById(id);
     }
 
-    public Collection<Faculty> findByColor(String color) {
-        ArrayList<Faculty> result = new ArrayList<>();
-        for (Faculty faculty : faculties.values()) {
-            if (Objects.equals(faculty.getColor(), color)) {
-                result.add(faculty);
-            }
-        }
-        return result;
+
+    public List<Faculty> findByColor(String color) {
+        return facultyRepository.findAllByColor(color); // Предположительно такое поведение реализовано в репозитории
     }
 
 }

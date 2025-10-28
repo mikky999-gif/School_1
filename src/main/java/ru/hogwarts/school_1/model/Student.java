@@ -1,16 +1,25 @@
 package ru.hogwarts.school_1.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.Objects;
 
+@Entity
 public class Student {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String name;
     private int age;
 
     public Student() {
     }
-
+    @Autowired
     public Student(long id, String name, int age) {
         this.id = id;
         this.name = name;
