@@ -5,6 +5,7 @@ import ru.hogwarts.school_1.model.Student;
 
 import java.util.List;
 
-public interface StudentRepository extends JpaRepository<Student, Long> { // добавляем public перед interface
+public interface StudentRepository extends JpaRepository<Student, Long> {
     List<Student> findAllByAge(Integer age);
+    List<Student> findByAgeBetween(Integer minAge, Integer maxAge);
 }

@@ -1,12 +1,11 @@
 package ru.hogwarts.school_1.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Faculty {
@@ -16,8 +15,10 @@ public class Faculty {
     private long id;
     private String name, color;
 
-    public Faculty() {
-    }
+    @OneToMany(mappedBy = "faculty", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Student> students = new HashSet<>();
+
+    public Faculty() {}
 
     @Autowired
     public Faculty(long id, String name, String color) {
@@ -25,6 +26,7 @@ public class Faculty {
         this.name = name;
         this.color = color;
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -73,4 +75,13 @@ public class Faculty {
     public void setColor(String color) {
         this.color = color;
     }
+
+    public Set<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Set<Student> students) {
+        this.students = students;
+    }
+
 }

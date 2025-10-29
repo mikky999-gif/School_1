@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hogwarts.school_1.model.Faculty;
+import ru.hogwarts.school_1.model.Student;
 import ru.hogwarts.school_1.repository.FacultyRepository;
 
 @Service
@@ -16,6 +17,14 @@ public class FacultyService {
     @Autowired
     public FacultyService(FacultyRepository facultyRepository) {
         this.facultyRepository = facultyRepository;
+    }
+
+    public List<Student> getStudentsOfFaculty(Long facultyId) {
+        Faculty faculty = facultyRepository.findById(facultyId).orElse(null);
+        if (faculty != null) {
+            return List.copyOf(faculty.getStudents());
+        }
+        return List.of();
     }
 
     @Transactional
@@ -38,9 +47,12 @@ public class FacultyService {
         facultyRepository.deleteById(id);
     }
 
-
     public List<Faculty> findByColor(String color) {
-        return facultyRepository.findAllByColor(color); // Предположительно такое поведение реализовано в репозитории
+        return facultyRepository.findAllByColor(color);
+    }
+
+    public List<Faculty> searchFaculty(String searchTerm) {
+        return facultyRepository.findByNameOrColorIgnoreCase(searchTerm);
     }
 
 }
