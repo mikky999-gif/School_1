@@ -1,7 +1,6 @@
 package ru.hogwarts.school_1.model;
 
 import jakarta.persistence.*;
-import org.springframework.data.annotation.Id;
 
 import java.util.Arrays;
 import java.util.Objects;
