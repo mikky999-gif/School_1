@@ -5,6 +5,7 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.hogwarts.school_1.entity.AllStudent;
 import ru.hogwarts.school_1.model.Faculty;
 import ru.hogwarts.school_1.model.Student;
 import ru.hogwarts.school_1.repository.StudentRepository;
@@ -53,6 +54,18 @@ public class StudentService {
 
     public List<Student> findByAgeBetween(Integer minAge, Integer maxAge) {
         return studentRepository.findByAgeBetween(minAge, maxAge);
+    }
+
+    public List<AllStudent> countAllStudent() {
+        return studentRepository.countAllStudent();
+    }
+
+    public List<AllStudent> findAvarageAge() {
+        return studentRepository.findAvarageAge();
+    }
+
+    public List<AllStudent> findFiveLastStudent() {
+        return studentRepository.findFiveLastStudent();
     }
 
 }

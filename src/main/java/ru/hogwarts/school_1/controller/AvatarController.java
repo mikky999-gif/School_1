@@ -1,34 +1,5 @@
 package ru.hogwarts.school_1.controller;
 
-/*
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import ru.hogwarts.school_1.service.AvatarService;
-import ru.hogwarts.school_1.service.FacultyService;
-
-import java.io.IOException;
-
-@RestController
-@RequestMapping("/avatar")
-public class AvatarController {
-    private final AvatarService avatarService;
-
-    public AvatarController(AvatarService avatarService) {
-        this.avatarService = avatarService;
-    }
-
-    @PostMapping(value = "/{studentId}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadAvatar(@PathVariable Long studentId, @RequestParam MultipartFile avatar)
-            throws IOException {
-                avatarService.uploadAvatar(studentId, avatar);
-                return ResponseEntity.ok().build();
-    }
-
-}
-*/
-
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -36,6 +7,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.hogwarts.school_1.entity.AllAvatar;
+import ru.hogwarts.school_1.entity.AllStudent;
 import ru.hogwarts.school_1.model.Avatar;
 import ru.hogwarts.school_1.service.AvatarService;
 
@@ -45,17 +18,25 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/avatar")
 public class AvatarController {
-    private final AvatarService avatarService;
-    private final String avatarsDir = "/path/to/avatarsDir";
 
     public AvatarController(AvatarService avatarService) {
         this.avatarService = avatarService;
+    }
+
+    private final AvatarService avatarService;
+    private final String avatarsDir = "/path/to/avatarsDir";
+
+    @GetMapping
+    public ResponseEntity<List<Avatar>> getAllAvatar(@RequestParam("page") Integer pageNumber, @RequestParam("size") Integer pageSize) {
+        List<Avatar> avatars = avatarService.getAllAvatar(pageSize, pageNumber);
+        return ResponseEntity.ok(avatars);
     }
 
     @PostMapping(value = "/{studentId}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
