@@ -1,0 +1,14 @@
+CREATE TABLE people (
+id SERIAL PRIMARY KEY,
+name CHAR(30) UNIQUE NOT NULL,
+age SMALLINT DEFAULT 20 CHECK (age > 18),
+licence BOOLEAN,
+car_id SERIAL
+)
+
+CREATE TABLE cars (
+id SERIAL PRIMARY KEY,
+brand CHAR(10) NOT NULL,
+model CHAR(10),
+cost MONEY
+)
