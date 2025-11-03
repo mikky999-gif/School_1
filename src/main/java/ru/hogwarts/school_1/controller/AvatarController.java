@@ -7,8 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.hogwarts.school_1.entity.AllAvatar;
-import ru.hogwarts.school_1.entity.AllStudent;
 import ru.hogwarts.school_1.model.Avatar;
 import ru.hogwarts.school_1.service.AvatarService;
 
@@ -34,7 +32,8 @@ public class AvatarController {
     private final String avatarsDir = "/path/to/avatarsDir";
 
     @GetMapping
-    public ResponseEntity<List<Avatar>> getAllAvatar(@RequestParam("page") Integer pageNumber, @RequestParam("size") Integer pageSize) {
+    public ResponseEntity<List<Avatar>> getAllAvatar(@RequestParam("page") Integer pageNumber,
+                                                     @RequestParam("size") Integer pageSize) {
         List<Avatar> avatars = avatarService.getAllAvatar(pageSize, pageNumber);
         return ResponseEntity.ok(avatars);
     }
