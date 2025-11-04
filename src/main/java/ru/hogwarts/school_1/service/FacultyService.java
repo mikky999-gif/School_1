@@ -55,4 +55,12 @@ public class FacultyService {
         return facultyRepository.findByNameOrColorIgnoreCase(searchTerm);
     }
 
+    public Optional<String> findLongestFacultyName() {
+        List<Faculty> faculties = facultyRepository.findAll();
+
+        return faculties.stream()
+                .map(Faculty::getName)
+                .max(Comparator.comparing(String::length));
+    }
+
 }
