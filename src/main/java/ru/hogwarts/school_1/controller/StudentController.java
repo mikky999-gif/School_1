@@ -1,25 +1,26 @@
 package ru.hogwarts.school_1.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school_1.model.Faculty;
 import ru.hogwarts.school_1.model.Student;
+import ru.hogwarts.school_1.repository.StudentRepository;
 import ru.hogwarts.school_1.service.StudentService;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 @RestController
 @RequestMapping("/student")
 public class StudentController {
 
     private final StudentService studentService;
+    private final StudentRepository studentRepository;
 
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, StudentRepository studentRepository) {
         this.studentService = studentService;
+        this.studentRepository = studentRepository;
     }
 
     @GetMapping("/{studentId}/faculty")
@@ -72,5 +73,37 @@ public class StudentController {
         return ResponseEntity.ok(students);
     }
 
+    @GetMapping("/names_start_from_A")
+    public ResponseEntity<List<String>> getStudentNamesStartingWithA() {
+        List<String> names = studentRepository.findAll()
+                .stream()
+                .filter(student -> student.getName().startsWith("A"))
+                .map(student -> student.getName().toUpperCase())
+                .sorted()
+                .collect(Collectors.toList());
+
+        return names.isEmpty()
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.ok(names);
+    }
+
+    @GetMapping("/avg_age_of_student")
+    public ResponseEntity<Double> getAverageAge() {
+        OptionalDouble averageAge = studentService.calculateAverageAge();
+
+        return averageAge.isPresent()
+                ? ResponseEntity.ok(averageAge.getAsDouble())
+                : ResponseEntity.noContent().build();
+    }
+
+
+    @GetMapping("/sum-parallel")
+    public ResponseEntity<Long> getSumParallel() {
+        long sum = LongStream.rangeClosed(1, 1_000_000)
+                .parallel()
+                .sum();
+
+        return ResponseEntity.ok((Long) sum);
+    }
 
 }
