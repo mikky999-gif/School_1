@@ -19,13 +19,11 @@ public class FacultyController {
         this.facultyService = facultyService;
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Faculty> getFacultyInfo(@PathVariable Long id) {
-        Faculty faculty = facultyService.findFaculty(id);
-        if (faculty == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(faculty);
+        return facultyService.findFaculty(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -35,12 +33,11 @@ public class FacultyController {
 
     @PutMapping
     public ResponseEntity<Faculty> editFaculty(@RequestBody Faculty faculty) {
-        Faculty foundFaculty = facultyService.editFaculty(faculty);
-        if (foundFaculty == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        return ResponseEntity.ok(foundFaculty);
+        return facultyService.findFaculty(faculty.getId())
+                .map(f -> ResponseEntity.ok(facultyService.editFaculty(faculty)))
+                .orElse(ResponseEntity.badRequest().build());
     }
+
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteFaculty(@PathVariable Long id) {

@@ -1,44 +1,45 @@
 package ru.hogwarts.school_1.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import ru.hogwarts.school_1.model.Student;
+import java.util.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.hogwarts.school_1.model.Student;
+import ru.hogwarts.school_1.repository.StudentRepository;
+
+@Service
 public class StudentService {
 
-    private final HashMap<Long, Student> students = new HashMap<>();
-    private long count = 0;
+    private final StudentRepository studentRepository;
 
+    @Autowired
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
+
+    @Transactional
     public Student addStudent(Student student) {
-        student.setId(count++);
-        students.put(student.getId(), student);
-        return student;
+        return studentRepository.save(student);
     }
 
-    public Student findStudent(long id) {
-        return students.get(id);
+
+    public Optional<Student> findStudent(Long id) {
+        return studentRepository.findById(id);
     }
 
-    public Student editStudent(Student student) {
-        if (!students.containsKey(student.getId())) {
-            return null;
-        }
-        students.put(student.getId(), student);
-        return student;
+    @Transactional
+    public Student editStudent(Student updatedStudent) {
+        return studentRepository.save(updatedStudent);
     }
 
-    public Student deleteStudent(long id) {
-        return students.remove(id);
+
+    @Transactional
+    public void deleteStudent(Long id) {
+        studentRepository.deleteById(id);
     }
 
-    public Collection<Student> findByAge(int age) {
-        ArrayList<Student> result = new ArrayList<>();
-        for (Student student : students.values()) {
-            if (student.getAge() == age) {
-                result.add(student);
-            }
-        }
-        return result;
+    public List<Student> findByAge(Integer age) {
+        return studentRepository.findAllByAge(age); // Предположительно такое поведение реализовано в репозитории
     }
 }
