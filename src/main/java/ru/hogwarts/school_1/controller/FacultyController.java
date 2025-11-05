@@ -1,13 +1,14 @@
 package ru.hogwarts.school_1.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school_1.model.Faculty;
+import ru.hogwarts.school_1.model.Student;
 import ru.hogwarts.school_1.service.FacultyService;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/faculty")
@@ -17,6 +18,11 @@ public class FacultyController {
 
     public FacultyController(FacultyService facultyService) {
         this.facultyService = facultyService;
+    }
+    @GetMapping("/{facultyId}/students")
+    public ResponseEntity<List<Student>> getStudentsOfFaculty(@PathVariable Long facultyId) {
+        List<Student> students = facultyService.getStudentsOfFaculty(facultyId);
+        return ResponseEntity.ok(students);
     }
 
     @GetMapping("/{id}")
@@ -52,4 +58,11 @@ public class FacultyController {
         }
         return ResponseEntity.ok(Collections.emptyList());
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Faculty>> searchFaculty(@RequestParam String term) {
+        List<Faculty> faculties = facultyService.searchFaculty(term.toLowerCase());
+        return ResponseEntity.ok(faculties);
+    }
+
 }

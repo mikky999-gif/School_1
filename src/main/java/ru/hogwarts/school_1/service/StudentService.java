@@ -5,6 +5,7 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.hogwarts.school_1.model.Faculty;
 import ru.hogwarts.school_1.model.Student;
 import ru.hogwarts.school_1.repository.StudentRepository;
 
@@ -16,6 +17,13 @@ public class StudentService {
     @Autowired
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
+    }
+    public Optional<Faculty> getFacultyOfStudent(Long studentId) {
+        Student student = studentRepository.findById(studentId).orElse(null);
+        if (student != null) {
+            return Optional.ofNullable(student.getFaculty());
+        }
+        return Optional.empty();
     }
 
     @Transactional
@@ -40,6 +48,11 @@ public class StudentService {
     }
 
     public List<Student> findByAge(Integer age) {
-        return studentRepository.findAllByAge(age); // Предположительно такое поведение реализовано в репозитории
+        return studentRepository.findAllByAge(age);
     }
+
+    public List<Student> findByAgeBetween(Integer minAge, Integer maxAge) {
+        return studentRepository.findByAgeBetween(minAge, maxAge);
+    }
+
 }
