@@ -7,8 +7,8 @@ age SMALLINT DEFAULT 20 CHECK (age > 16)
 CREATE TABLE faculties (
 id SERIAL,
 name CHAR(30),
-colour CHAR(10)
+color CHAR(10)
 )
 
 ALTER TABLE faculties
-ADD CONSTRAINT name_colour_uniqe UNIQUE (name, colour)
+ADD CONSTRAINT name_color_uniqe UNIQUE (name, color)
