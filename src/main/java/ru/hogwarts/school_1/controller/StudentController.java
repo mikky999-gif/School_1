@@ -75,13 +75,7 @@ public class StudentController {
 
     @GetMapping("/names_start_from_A")
     public ResponseEntity<List<String>> getStudentNamesStartingWithA() {
-        List<String> names = studentRepository.findAll()
-                .stream()
-                .filter(student -> student.getName().startsWith("A"))
-                .map(student -> student.getName().toUpperCase())
-                .sorted()
-                .collect(Collectors.toList());
-
+        List<String> names = studentService.getStudentNamesStartingWithA();
         return names.isEmpty()
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(names);
@@ -89,21 +83,16 @@ public class StudentController {
 
     @GetMapping("/avg_age_of_student")
     public ResponseEntity<Double> getAverageAge() {
-        OptionalDouble averageAge = studentService.calculateAverageAge();
-
-        return averageAge.isPresent()
-                ? ResponseEntity.ok(averageAge.getAsDouble())
+        Double averageAge = studentService.getAverageAge();
+        return averageAge != null
+                ? ResponseEntity.ok(averageAge)
                 : ResponseEntity.noContent().build();
     }
 
-
     @GetMapping("/sum-parallel")
     public ResponseEntity<Long> getSumParallel() {
-        long sum = LongStream.rangeClosed(1, 1_000_000)
-                .parallel()
-                .sum();
-
-        return ResponseEntity.ok((Long) sum);
+        Long sum = studentService.getSumParallel();
+        return ResponseEntity.ok(sum);
     }
 
 }
