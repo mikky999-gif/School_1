@@ -3,7 +3,7 @@ id SERIAL PRIMARY KEY,
 name CHAR(30) UNIQUE NOT NULL,
 age SMALLINT DEFAULT 20 CHECK (age > 18),
 licence BOOLEAN,
-car_id SERIAL
+car_id INT REFERENCES cars(id)
 )
 
 CREATE TABLE cars (
