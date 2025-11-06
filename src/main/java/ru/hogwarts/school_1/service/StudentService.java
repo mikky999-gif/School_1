@@ -11,6 +11,8 @@ import ru.hogwarts.school_1.repository.StudentRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalDouble;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 @Slf4j
 @Service
@@ -78,16 +80,27 @@ public class StudentService {
         return studentRepository.findFiveLastStudent();
     }
 
-    public List<Student> findAll() {
-        return studentRepository.findAll();
+    public List<String> getStudentNamesStartingWithA() {
+        return studentRepository.findAll()
+                .stream()
+                .filter(student -> student.getName().startsWith("A"))
+                .map(student -> student.getName().toUpperCase())
+                .sorted()
+                .collect(Collectors.toList());
     }
 
-    public OptionalDouble calculateAverageAge() {
-        List<Student> students = studentRepository.findAll();
-
-        return students.stream()
+    public Double getAverageAge() {
+        OptionalDouble averageAge = studentRepository.findAll()
+                .stream()
                 .mapToDouble(Student::getAge)
                 .average();
+        return averageAge.isPresent() ? averageAge.getAsDouble() : null;
+    }
+
+    public Long getSumParallel() {
+        return LongStream.rangeClosed(1, 1_000_000)
+                .parallel()
+                .sum();
     }
 
 }
