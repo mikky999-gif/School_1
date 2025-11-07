@@ -9,6 +9,7 @@ import ru.hogwarts.school_1.service.StudentService;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 @RestController
@@ -93,6 +94,16 @@ public class StudentController {
     public ResponseEntity<Long> getSumParallel() {
         Long sum = studentService.getSumParallel();
         return ResponseEntity.ok(sum);
+    }
+
+    @GetMapping("/students/print-parallel")
+    public void printStudentsInParallel() {
+        studentService.printStudentsInParallel();
+    }
+
+    @GetMapping("/students/print-synchronized")
+    public void printStudentsSynchronized() {
+        studentService.printStudentsSynchronized();
     }
 
 }

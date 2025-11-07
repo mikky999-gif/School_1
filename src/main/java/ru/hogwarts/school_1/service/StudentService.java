@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 @Slf4j
@@ -101,6 +102,54 @@ public class StudentService {
         return LongStream.rangeClosed(1, 1_000_000)
                 .parallel()
                 .sum();
+    }
+
+    public void printStudentsInParallel() {
+        List<Student> allStudents = studentRepository.findAll();
+
+        if (allStudents.size() < 6) {
+            System.err.println("Требуется минимум шесть студентов.");
+            return;
+        }
+
+        for (int i = 0; i < 2; i++) {
+            System.out.println(allStudents.get(i).getName());
+        }
+
+        IntStream.range(2, 6)
+                .parallel()
+                .forEach(index -> {
+                    String threadName = Thread.currentThread().getName();
+                    System.out.printf("%s: %s%n", threadName, allStudents.get(index).getName());
+                });
+    }
+
+    synchronized void safePrint(String message) {
+        System.out.println(message);
+    }
+
+    public void printStudentsSynchronized() {
+        List<Student> allStudents = studentRepository.findAll();
+
+        if (allStudents.size() < 6) {
+            System.err.println("Необходимо минимум шесть студентов");
+            return;
+        }
+
+        safePrint(allStudents.get(0).getName());
+        safePrint(allStudents.get(1).getName());
+
+        Runnable thirdAndFourthTask = () -> {
+            safePrint(allStudents.get(2).getName());
+            safePrint(allStudents.get(3).getName());
+        };
+        new Thread(thirdAndFourthTask).start();
+
+        Runnable fifthAndSixthTask = () -> {
+            safePrint(allStudents.get(4).getName());
+            safePrint(allStudents.get(5).getName());
+        };
+        new Thread(fifthAndSixthTask).start();
     }
 
 }
